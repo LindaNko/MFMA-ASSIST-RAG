@@ -1,0 +1,80 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>MFMA Assist</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" type="text/css" href="styles.css">
+
+  <!-- pdf.js (module build) -->
+  <script type="module">
+    import * as pdfjsLib from "https://mozilla.github.io/pdf.js/build/pdf.mjs";
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://mozilla.github.io/pdf.js/build/pdf.worker.mjs";
+    window.pdfjsLib = pdfjsLib; // expose globally for app.js
+  </script>
+
+  <!-- Transformers.js (Xenova) -->
+  <script type="module">
+    import { pipeline, cos_sim } from "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2";
+    window.TRANSFORMERS = { pipeline, cos_sim };
+  </script>
+</head>
+<body>
+  <header class="app-header">
+    
+    <h1>MFMA Assist</h1>
+    <p class="subtitle">Ask questions about any  PDF as a knowledge base. Answers grounded only in your document.</p>
+  </header>
+
+  <main class="container">
+    <!-- Document input -->
+    <section class="card">
+      <h2>1) Load your PDF</h2>
+      <div class="input-row">
+        <label class="btn">
+          📄 Upload PDF
+          <input type="file" id="pdfFile" accept="application/pdf" hidden />
+        </label>
+
+        <span class="or">or</span>
+
+        <input type="url" id="driveUrl" placeholder="Paste Google Drive link…" />
+        <button id="downloadBtn">Fetch PDF</button>
+      </div>
+      <p class="hint">Tip: For Google Drive, a link like <code>https://drive.google.com/file/d/FILE_ID/view</code> works.</p>
+      <div id="loadStatus" class="status"></div>
+    </section>
+
+    <!-- Embedding & index -->
+    <section class="card">
+      <h2>2) Build search index</h2>
+      <div class="input-row">
+        <select id="embedModel">
+          <option value="Xenova/all-MiniLM-L6-v2" selected>All-MiniLM-L6-v2 (fast, ~35MB)</option>
+          <option value="Xenova/bge-small-en-v1.5">BGE Small v1.5 (retrieval-focused, ~125MB)</option>
+        </select>
+        <button id="buildIndexBtn">Build Index</button>
+      </div>
+      <p class="hint">We chunk the PDF and compute embeddings in your browser for private, fast search.</p>
+      <div id="indexStatus" class="status"></div>
+    </section>
+
+    <!-- Ask questions -->
+    <section class="card">
+      <h2>3) Ask a question</h2>
+      <textarea id="question" rows="3" placeholder="e.g., What does this policy say about attendance?"></textarea>
+      <div class="input-row">
+        <label><input type="checkbox" id="enableFusion" /> Enable Query Fusion (LLM rewrites)</label>
+        <button id="askBtn">Ask</button>
+      </div>
+      <div id="answer" class="answer"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <small>Powered by pdf.js, Transformers.js, and Meta Llama 3.3 via OpenRouter.</small>
+  </footer>
+
+  app.js</script>
+</</body>
